@@ -14,9 +14,10 @@ const Home = () => {
   }, [status, dispatch]);
 
   return (
-    <div className="container max-w-screen  p-4 dark:bg-slate-900">
-      <h1 className="text-4xl font-bold text-center mb-8">Product Store</h1>
-      {/* {status === "loading" && <div>Loading...</div>} */}
+    <div className="container max-w-screen p-4 dark:bg-slate-900">
+      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">
+        Product Store
+      </h1>
       {status === "loading" && (
         <div className="loading_Container">
           <div className="loading">

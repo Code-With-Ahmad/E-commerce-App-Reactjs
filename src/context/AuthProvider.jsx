@@ -2,27 +2,26 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../firebase/firebase_auth";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 
-// Create AuthContext
 const AuthContext = createContext();
 
-// Function to get initial user from localStorage synchronously
 const getInitialUser = () => {
   const storedSession = localStorage.getItem("authSession");
   if (storedSession) {
     const { userData, timestamp } = JSON.parse(storedSession);
     const now = Date.now();
-    const fifteenMinutes = 15 * 60 * 1000; // 15 minutes in milliseconds
+    const fifteenMinutes = 15 * 60 * 1000;
     if (now - timestamp < fifteenMinutes) {
-      return userData; // Return valid user data
+      return userData;
     } else {
-      localStorage.removeItem("authSession"); // Clear expired session
+      localStorage.removeItem("authSession");
     }
   }
-  return null; // No valid session
+  return null;
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(getInitialUser); // Initialize from localStorage
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -33,16 +32,15 @@ export const AuthProvider = ({ children }) => {
           displayName: currentUser.displayName,
         };
         setUser(userData);
-        // Store in localStorage with timestamp
         localStorage.setItem(
           "authSession",
           JSON.stringify({ userData, timestamp: Date.now() })
         );
-      } else if (!getInitialUser()) {
-        // Only clear if localStorage doesn't have a valid session
-        setUser(null);
-        localStorage.removeItem("authSession");
+      } else {
+        const localUser = getInitialUser();
+        setUser(localUser);
       }
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -53,10 +51,16 @@ export const AuthProvider = ({ children }) => {
       await signOut(auth);
       setUser(null);
       localStorage.removeItem("authSession");
+      localStorage.removeItem("cartItems"); // Clear cart cache
+      localStorage.removeItem("favorites"); // Clear favorites cache
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AuthContext.Provider value={{ user, logout }}>
