@@ -1,76 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../api/productActions";
-import ProductCard from "../components/ProductCard";
+import React from "react";
+import ProductList from "../components/ProductList";
 
 const Shop = () => {
-  const dispatch = useDispatch();
-  const { items, status, error } = useSelector((state) => state.products);
-  const [sortOrder, setSortOrder] = useState("default");
-
-  useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchProducts());
-    }
-  }, [status, dispatch]);
-
-  const sortedProducts = [...items].sort((a, b) => {
-    if (sortOrder === "lowToHigh") return a.price - b.price;
-    if (sortOrder === "highToLow") return b.price - a.price;
-    return 0;
-  });
-
-  return (
-    <div className="max-w-screen p-4 dark:bg-slate-900 mt-20">
-      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">
-        Product Store
-      </h1>
-
-      <div className="mb-8 text-end">
-        <label className="mr-2 font-bold dark:text-white">Sort by Price:</label>
-        <select
-          className="border px-2 py-1 rounded"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
-          <option value="default" className="dark:text-black">
-            Default
-          </option>
-          <option value="lowToHigh" className="dark:text-black">
-            Low to High
-          </option>
-          <option value="highToLow" className="dark:text-black">
-            High to Low
-          </option>
-        </select>
-      </div>
-
-      {status === "loading" && (
-        <div className="flex justify-center items-center h-40">
-          <div className="loading">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      )}
-      {status === "failed" && (
-        <div className="text-center text-red-500">Error: {error}</div>
-      )}
-
-      {status === "succeeded" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 mx-auto w-[80vw]  ">
-          {sortedProducts.map((product) => (
-            <div className="flex justify-center " key={product.id}>
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  return <ProductList isCategoryPage={false} />;
 };
 
 export default Shop;
