@@ -8,7 +8,7 @@ const Favourite = () => {
   const { favorites, toggleFavorite } = useCart();
 
   return (
-    <div className="container mx-auto p-4 dark:bg-slate-900 min-h-screen">
+    <div className="container mx-auto p-4  mt-30 dark:bg-slate-900 min-h-[40vh]">
       <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">
         Your Favorites
       </h1>
@@ -23,22 +23,22 @@ const Favourite = () => {
         </p>
       )}
       {user && favorites.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
           {favorites.map((item) => (
             <div
               key={item.id}
-              className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-lg"
+              className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-lg "
             >
               <Link to={`/product/${item.productId}`}>
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-64 object-cover rounded"
+                  className="w-full h-64 object-contain rounded mix-blend-multiply "
                 />
-                <h2 className="text-xl font-semibold mt-2 dark:text-white">
+                <h2 className="text-md font-semibold mt-2 dark:text-white">
                   {item.title}
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-gray-600 font-semibold dark:text-gray-300 ">
                   ${item.price}
                 </p>
               </Link>

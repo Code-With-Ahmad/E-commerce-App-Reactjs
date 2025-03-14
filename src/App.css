@@ -4,14 +4,11 @@
   font-family: "Roboto", sans-serif;
 }
 .ul li:hover {
-  translate: 5px;
-  transition: 0.1s linear;
+  translate: 10px;
+  transition: 0.3s linear;
   color: white;
-  font-weight: bold;
 }
-.ul li {
-  padding: 5px 0px;
-}
+
 /* From Uiverse.io by satyamchaudharydev */
 .loading {
   --speed-of-animation: 0.9s;
@@ -68,7 +65,52 @@
   }
 }
 .loading {
-  position: relative;
+  position: absolute;
+  top: 30%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%, -50%);
+}
+.hero {
+  background-image: url("assets/images/fsr_s2.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100%;
+}
+.loading_Container_ {
+  display: grid;
+  place-content: center;
+  height: 100vh;
+}
+/* In your global CSS file (e.g., index.css) */
+html {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.product_card {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.addToCart,
+.f_o {
+  visibility: hidden;
+}
+.card_img:hover {
+  .addToCart,
+  .f_o {
+    visibility: visible;
+    transition: 0.7s;
+  }
+}
+.f_o button {
+  font-size: 15px;
+  padding: 6px 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  cursor: pointer;
+  &:hover {
+    background-color: black;
+    color: white;
+  }
+}
+.addToCart {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }

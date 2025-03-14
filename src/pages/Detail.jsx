@@ -40,7 +40,6 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product, quantity);
-      
     }
   };
 
@@ -52,7 +51,7 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 dark:bg-slate-900 min-h-screen">
+    <div className="container mx-auto mt-30 p-4 dark:bg-slate-900 min-h-screen">
       {status === "loading" && (
         <div className="loading_Container">
           <div className="loading">
@@ -69,7 +68,7 @@ const ProductDetail = () => {
         <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-lg">
           <div className="flex flex-col md:flex-row gap-6">
             <img
-              className="w-full md:w-1/2 h-96 object-cover rounded"
+              className="w-full md:w-1/2 h-96 object-contain rounded"
               src={product.image}
               alt={product.title}
             />

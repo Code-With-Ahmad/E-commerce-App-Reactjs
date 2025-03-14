@@ -1,4 +1,4 @@
-// src/redux/slices/favoritesSlice.js
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../../firebase/firebase_auth";
 import {

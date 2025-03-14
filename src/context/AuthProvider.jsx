@@ -4,21 +4,6 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const AuthContext = createContext();
 
-const getInitialUser = () => {
-  const storedSession = localStorage.getItem("authSession");
-  if (storedSession) {
-    const { userData, timestamp } = JSON.parse(storedSession);
-    const now = Date.now();
-    const fifteenMinutes = 15 * 60 * 1000;
-    if (now - timestamp < fifteenMinutes) {
-      return userData;
-    } else {
-      localStorage.removeItem("authSession");
-    }
-  }
-  return null;
-};
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,13 +17,9 @@ export const AuthProvider = ({ children }) => {
           displayName: currentUser.displayName,
         };
         setUser(userData);
-        localStorage.setItem(
-          "authSession",
-          JSON.stringify({ userData, timestamp: Date.now() })
-        );
+        localStorage.setItem("authSession", JSON.stringify({ userData }));
       } else {
-        const localUser = getInitialUser();
-        setUser(localUser);
+        setUser(null);
       }
       setLoading(false);
     });
@@ -51,15 +32,25 @@ export const AuthProvider = ({ children }) => {
       await signOut(auth);
       setUser(null);
       localStorage.removeItem("authSession");
-      localStorage.removeItem("cartItems"); // Clear cart cache
-      localStorage.removeItem("favorites"); // Clear favorites cache
+      localStorage.removeItem("cartItems");
+      localStorage.removeItem("favorites");
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading_Container_">
+        <div className="loading">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    );
   }
 
   return (

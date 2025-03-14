@@ -1,7 +1,8 @@
 import React from "react";
-import { Link, useRouteError } from "react-router-dom";
+import { useNavigate, useRouteError } from "react-router-dom";
 
 const PageNotFound = () => {
+  const navigate = useNavigate();
   const error = useRouteError();
   console.log(error);
 
@@ -23,7 +24,13 @@ const PageNotFound = () => {
             type="button"
             className="text-white text-center bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-1 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
           >
-            <Link>Back To Home</Link>
+            <button
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              Back To Home
+            </button>
           </button>
         </div>
       </div>

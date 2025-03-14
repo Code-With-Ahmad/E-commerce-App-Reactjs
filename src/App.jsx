@@ -17,15 +17,22 @@ import ProductDetail from "./pages/Detail";
 import Cart from "./pages/Cart";
 import Favourite from "./pages/Favourite";
 import { useAuth } from "./context/AuthProvider";
-
+import CategoryPage from "./pages/Category"; 
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
-  console.log("PrivateRoute - Current user:", user);
 
-  // If user is undefined/null and we're still loading, show a loading state
   if (user === null && localStorage.getItem("authSession")) {
-    console.log("PrivateRoute - Waiting for auth state to resolve");
-    return <div>Loading...</div>; // Temporary loading state
+    return (
+      <div className="loading_Container">
+        <div className="loading">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    );
   }
 
   return user ? children : <Navigate to="/login" replace />;
@@ -51,6 +58,15 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Shop />
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: "category/:categoryName",
+        element: (
+          <PrivateRoute>
+            <CategoryPage />
           </PrivateRoute>
         ),
       },

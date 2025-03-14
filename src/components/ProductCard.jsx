@@ -1,30 +1,74 @@
-import React from "react";
+import {
+  faHeart,
+  faMagnifyingGlass,
+  faStar,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartProvider";
 
 const ProductCard = ({ product }) => {
+  const { addToCart, toggleFavorite, favorites } = useCart();
+  const [isFavorite, setIsFavorite] = useState(
+    favorites.some((fav) => fav.productId === product.id)
+  );
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    addToCart(product, 1);
+  };
+
+  const handleToggleFavorite = (e) => {
+    e.preventDefault();
+    toggleFavorite(product);
+    setIsFavorite(!isFavorite);
+  };
+
   return (
-    <Link to={`/product/${product.id}`} className="block">
-      <div className="rounded w-full shadow-lg bg-white dark:bg-slate-900 px-5 hover:shadow-xl transition-shadow duration-300">
-        <img
-          className="w-full h-64 object-cover"
-          src={product.image}
-          alt={product.title}
-        />
-        <div className="px-6 py-4">
-          <div className="font-bold text-xl mb-2 dark:text-white">
-            {product.title}
-          </div>
-          <div className="flex items-center justify-between mt-4">
-            <span className="text-lg font-semibold dark:text-white">
-              ${product.price}
-            </span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              Rating: {product.rating.rate}
-            </span>
+    <div className="product_card w-100  rounded-3xl   overflow-hidden min-h-[400px] px-4 py-2  ">
+      <Link to={`/product/${product.id}`} className="block">
+        <div className="card_img relative overflow-hidden">
+          <img
+            src={product.image}
+            alt=""
+            className="w-auto m-auto object-contain h-80  transition-transform duration-300 ease-in-out hover:scale-120  "
+          />
+          <button
+            className=" addToCart absolute bottom-15 bg-black text-white text-sm right-25 cursor-pointer rounded-full py-2 px-10 hover:bg-white hover:text-black "
+            onClick={handleAddToCart}
+          >
+            Add To Cart
+          </button>
+          <div className="f_o absolute top-4 right-4 space-y-2 flex flex-col">
+            <button
+              className={`faviorite rounded-full text-center  bg-white text-black cursor-pointer hover:opacity-80 ${
+                isFavorite ? "text-red-500" : ""
+              }`}
+              onClick={handleToggleFavorite}
+            >
+              <FontAwesomeIcon icon={faHeart} />
+            </button>
+            <button className="overview rounded-full text-center  bg-white text-black hover:opacity-80">
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            </button>
           </div>
         </div>
-      </div>
-    </Link>
+        <div className="card_detail">
+          <p className="title text-sm font-semibold py-2">{product.title}</p>
+          <p className="rating">
+            {[...Array(Math.round(product.rating.rate))].map((_, i) => (
+              <FontAwesomeIcon
+                key={i}
+                icon={faStar}
+                className="text-yellow-500"
+              />
+            ))}
+          </p>
+          <p className="price font-semibold py-2 text-sm">$ {product.price}</p>
+        </div>
+      </Link>
+    </div>
   );
 };
 

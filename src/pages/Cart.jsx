@@ -18,24 +18,21 @@ const Cart = () => {
   const { cartItems, removeFromCart, setCartItems, setCartCount } = useCart();
   const [localCartItems, setLocalCartItems] = useState(cartItems);
 
-  // Sync local state with cartItems from context
   useEffect(() => {
     setLocalCartItems(cartItems);
   }, [cartItems]);
 
   const updateQuantity = async (itemId, newQuantity) => {
-    if (newQuantity < 1) return; // Prevent negative or zero quantities
+    if (newQuantity < 1) return;
     try {
       const updatedItems = localCartItems.map((item) =>
         item.id === itemId ? { ...item, quantity: newQuantity } : item
       );
       setLocalCartItems(updatedItems);
 
-      // Update Firestore
       const cartRef = doc(db, "cart", itemId);
       await setDoc(cartRef, { quantity: newQuantity }, { merge: true });
 
-      // Update CartProvider state and localStorage
       setCartItems(updatedItems);
       localStorage.setItem("cartItems", JSON.stringify(updatedItems));
     } catch (error) {
@@ -48,8 +45,8 @@ const Cart = () => {
       (sum, item) => sum + item.price * item.quantity,
       0
     );
-    const shipping = 10; // Flat shipping rate
-    const gst = subtotal * 0.1; // 10% GST
+    const shipping = 10;
+    const gst = subtotal * 0.1;
     return {
       subtotal: subtotal.toFixed(2),
       shipping: shipping.toFixed(2),
@@ -59,24 +56,33 @@ const Cart = () => {
   };
 
   const handleCheckout = async () => {
-    if (!user) return;
+    if (!user) {
+      toast.error("Please log in to proceed with checkout.");
+      return;
+    }
+
     try {
-      // Clear Firestore cart
       const cartQuery = query(
         collection(db, "cart"),
         where("userId", "==", user.uid)
       );
       const querySnapshot = await getDocs(cartQuery);
+
+      if (querySnapshot.empty) {
+        toast.error("Your cart is already empty.");
+        return;
+      }
+
+      //
       const deletePromises = querySnapshot.docs.map((docSnapshot) =>
-        deleteDoc(doc(db, "cart", docSnapshot.id))
+        deleteDoc(docSnapshot.ref)
       );
       await Promise.all(deletePromises);
 
-      // Clear local state and storage
       setCartItems([]);
       setCartCount(0);
-      localStorage.setItem("cartItems", JSON.stringify([]));
       setLocalCartItems([]);
+      localStorage.setItem("cartItems", JSON.stringify([]));
 
       toast.success("Thanks for shopping!", { autoClose: 2000 });
     } catch (error) {
@@ -87,7 +93,7 @@ const Cart = () => {
   const { subtotal, shipping, gst, total } = calculateTotal();
 
   return (
-    <div className="container mx-auto p-4 dark:bg-slate-900 min-h-screen relative">
+    <div className="container mt-30 mx-auto p-4 dark:bg-slate-900 relative min-h-[40vh]">
       <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">
         Your Cart
       </h1>
@@ -101,7 +107,7 @@ const Cart = () => {
       )}
       {user && localCartItems.length > 0 && (
         <>
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-6 mb-100">
             {localCartItems.map((item) => (
               <div
                 key={item.id}
@@ -120,7 +126,7 @@ const Cart = () => {
                     ${item.price} x {item.quantity} = $
                     {(item.price * item.quantity).toFixed(2)}
                   </p>
-                  <div className="flex items-center mt-2">
+                  <div className="flex items-center mt-2 space-x-1">
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
                       className="px-2 py-1 bg-gray-300 dark:bg-gray-600 text-black dark:text-white rounded-l"
@@ -128,15 +134,10 @@ const Cart = () => {
                       -
                     </button>
                     <input
-                      type="number"
+                      type="text"
                       value={item.quantity}
-                      onChange={(e) =>
-                        updateQuantity(
-                          item.id,
-                          Math.max(1, Number(e.target.value))
-                        )
-                      }
-                      className="w-12 text-center border-t border-b dark:bg-slate-700 dark:text-white dark:border-gray-600"
+                      className="w-12 text-center border dark:bg-slate-700 dark:text-white dark:border-gray-600"
+                      readOnly
                     />
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
@@ -157,7 +158,7 @@ const Cart = () => {
           </div>
 
           {/* Summary Box */}
-          <div className="fixed bottom-4 right-8 w-80 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-lg border dark:border-gray-700">
+          <div className="absolute bottom-12 right-0 w-80 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-lg border dark:border-gray-700">
             <h2 className="text-xl font-semibold mb-2 dark:text-white">
               Order Summary
             </h2>

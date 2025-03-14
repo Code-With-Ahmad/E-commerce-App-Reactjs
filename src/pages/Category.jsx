@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { fetchProducts } from "../api/productActions";
 import ProductCard from "../components/ProductCard";
 
-const Shop = () => {
+const CategoryPage = () => {
   const dispatch = useDispatch();
+  const { categoryName } = useParams();
   const { items, status, error } = useSelector((state) => state.products);
   const [sortOrder, setSortOrder] = useState("default");
 
@@ -14,7 +16,13 @@ const Shop = () => {
     }
   }, [status, dispatch]);
 
-  const sortedProducts = [...items].sort((a, b) => {
+  const filteredProducts = items.filter(
+    (product) =>
+      product.category.toLowerCase() ===
+      decodeURIComponent(categoryName).toLowerCase()
+  );
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortOrder === "lowToHigh") return a.price - b.price;
     if (sortOrder === "highToLow") return b.price - a.price;
     return 0;
@@ -23,25 +31,19 @@ const Shop = () => {
   return (
     <div className="max-w-screen p-4 dark:bg-slate-900 mt-20">
       <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">
-        Product Store
+        {decodeURIComponent(categoryName)}
       </h1>
 
       <div className="mb-8 text-end">
         <label className="mr-2 font-bold dark:text-white">Sort by Price:</label>
         <select
-          className="border px-2 py-1 rounded"
+          className="border px-2 py-1 rounded dark:bg-slate-800 dark:text-white"
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
         >
-          <option value="default" className="dark:text-black">
-            Default
-          </option>
-          <option value="lowToHigh" className="dark:text-black">
-            Low to High
-          </option>
-          <option value="highToLow" className="dark:text-black">
-            High to Low
-          </option>
+          <option value="default">Default</option>
+          <option value="lowToHigh">Low to High</option>
+          <option value="highToLow">High to Low</option>
         </select>
       </div>
 
@@ -56,12 +58,13 @@ const Shop = () => {
           </div>
         </div>
       )}
+
       {status === "failed" && (
         <div className="text-center text-red-500">Error: {error}</div>
       )}
 
       {status === "succeeded" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 mx-auto w-[80vw]  ">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 gap-x-10 mx-auto w-[80vw]  ">
           {sortedProducts.map((product) => (
             <div className="flex justify-center " key={product.id}>
               <ProductCard product={product} />
@@ -69,8 +72,14 @@ const Shop = () => {
           ))}
         </div>
       )}
+
+      {status === "succeeded" && sortedProducts.length === 0 && (
+        <div className="text-center text-xl dark:text-white">
+          No products found in this category
+        </div>
+      )}
     </div>
   );
 };
 
-export default Shop;
+export default CategoryPage;

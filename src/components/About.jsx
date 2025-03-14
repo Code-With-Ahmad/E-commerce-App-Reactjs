@@ -1,109 +1,140 @@
 import React from "react";
-import logo from "../assets/images/logo_white.png";
-import { Link } from "react-router-dom";
 
 const About = () => {
   return (
-    <>
-      <section className="w-screen bg-black text-white dark:bg-slate-900 flex gap-20 justify-evenly align-super pt-10 pb-8 px-4">
-        <div>
-          <ul>
-            <li>
-              <img src={logo} alt="" />
-            </li>
-            <li className="py-4">
-              <p>
-                Experience the Perfect Fusion of Style and Luxury, Where <br />
+    <footer className="bg-[#000000] dark:bg-slate-900 text-white py-10 border-t-2 border-white  ">
+      <div className="px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8 xl:grid-cols-[2fr_1fr_1fr_2fr]">
+          {/* About Us Section */}
+          <div className="space-y-4 ">
+            <div className="w-32">
+              <img
+                src="//rokan-theme.myshopify.com/cdn/shop/files/logo_white.png?v=1719496957&width=533"
+                alt="Rokan Logo"
+                className="w-full h-auto"
+                loading="lazy"
+              />
+            </div>
+            <div className="space-y-2 text-sm">
+              <p className="text-gray-400 py-2 lg:pe-20 text-md xl:text-[17px]">
+                Experience the Perfect Fusion of Style and Luxury, Where
                 Elegance Meets Sophistication in Every Detail.
               </p>
-            </li>
-            <li>
               <p>
-                <strong>Phone : </strong> +92 300 1234567
+                <span className="font-semibold lg:text-[18px] text-gray-400">
+                  Phone:
+                </span>{" "}
+                +222-1800-2628
               </p>
-            </li>
-            <li>
               <p>
-                <strong>Address : </strong> Model Town Lahore Pakistan
+                <span className="font-semibold lg:text-[18px] text-gray-400">
+                  Address:
+                </span>{" "}
+                502 New Design Str, Melbourne, Australia
               </p>
-            </li>
-            <li>
               <p>
-                <strong>Email : </strong> Somebody@somebody.com
+                <span className="font-semibold lg:text-[18px] text-gray-400">
+                  Email:
+                </span>{" "}
+                rokan@domain.com
               </p>
-            </li>
-          </ul>
-        </div>
-        <div className=" ul flex gap-10 text-left">
-          <div>
-            <h1 className="font-bold text-1xl">Our Company</h1>
-            <ul className="mt-3">
-              <li>
-                <Link>About Us</Link>
-              </li>
-              <li>
-                <Link>Our Stories</Link>
-              </li>
-              <li>
-                <Link>Contact Us</Link>
-              </li>
-              <li>
-                <Link>Size Guide</Link>
-              </li>
-              <li>
-                <Link>My Account</Link>
-              </li>
-              <li>
-                <Link>Timeline</Link>
-              </li>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-xl font-semibold mb-4">Our Company</h3>
+            <ul className="ul space-y-3 text-md">
+              {[
+                "About Us",
+                "Our Stores",
+                "Contact Us",
+                "Size Guide",
+                "My Account",
+                "Timeline",
+              ].map((item, index) => (
+                <li key={index}>
+                  <a
+                    className="hover:text-white text-gray-400"
+                    href={`/${item.toLowerCase().replace(" ", "-")}`}
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
-          <div>
-            <h1 className="font-bold text-1xl">Customer Service</h1>
-            <ul className="mt-3 text-gray-50">
-              <li className="">
-                <Link>Privacy Policy</Link>
-              </li>
-              <li>
-                <Link>Theme FAQs</Link>
-              </li>
-              <li>
-                <Link>Contact Us</Link>
-              </li>
-              <li>
-                <Link>Refund Policy</Link>
-              </li>
-              <li>
-                <Link>Advanced Search</Link>
-              </li>
-              <li>
-                <Link>Store Locations</Link>
-              </li>
+
+          {/* Customer Service Section */}
+          <div className="space-y-2 ">
+            <h3 className="text-xl font-semibold mb-4">Customer Service</h3>
+            <ul className="ul space-y-3 text-md">
+              {[
+                "Privacy Policy",
+                "Theme FAQs",
+                "Refund Policy",
+                "Advanced Search",
+                "Store Locations",
+                "Term & Conditions",
+              ].map((item, index) => (
+                <li key={index}>
+                  <a
+                    href={`/${item
+                      .toLowerCase()
+                      .replace(/ & /g, "-")
+                      .replace(" ", "-")}`}
+                    className="hover:text-white text-gray-400"
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold">Sign up To Newsletter</h2>
-          <p className="py-4">
-            Sign up for exclusive updates, new arrivals & insider only discounts
-          </p>
-          <div>
-            <input
-              className="text-white border-2 my-2 py-2 px-2 rounded-2xl w-80"
-              type="text"
-              placeholder="Enter Your Name"
-            />
-            <button className="bg-white cursor-pointer text-black ms-5 p-3 rounded-3xl">
-              Subscribe
-            </button>
+
+          {/* Newsletter Section */}
+          <div className="space-y-4 xl:ps-5">
+            <h3 className="text-lg xl:text-2xl font-semibold mb-4">
+              Sign Up To Newsletter
+            </h3>
+            <p className="text-sm lg:text-lg text-gray-400 mb-4">
+              Sign up for exclusive updates, new arrivals & insider only
+              discounts
+            </p>
+            <form className="flex flex-col sm:flex-row gap-2 xl:py-3">
+              <input
+                type="email"
+                placeholder="Enter your email..."
+                className="flex-1 p-2 rounded-full border-2 border-white"
+                required
+              />
+              <button
+                type="submit"
+                className="bg-white hover:bg-gray-400 transition duration-200 cursor-pointer text-black px-6 py-2  rounded-full"
+              >
+                SUBSCRIBE
+              </button>
+            </form>
+            <p className="mt-2 text-xs lg:text-[15px] text-gray-500">
+              ***By entering the e-mail you accept the{" "}
+              <a
+                href="/pages/term-condition"
+                className="text-white lg:text-[17px]"
+              >
+                terms and conditions
+              </a>{" "}
+              and the{" "}
+              <a
+                href="/pages/privacy-policy"
+                className="text-white lg:text-[17px]"
+              >
+                privacy policy
+              </a>
+              .
+            </p>
           </div>
-          <p className="py-4">
-            ***By entering the e-mail you accept the <b>terms and conditions</b>
-            and the <b>privacy policy</b>.
-          </p>
         </div>
-      </section>
-    </>
+      </div>
+    </footer>
   );
 };
 
