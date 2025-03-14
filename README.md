@@ -30,7 +30,7 @@ npm install
 
 ### 3. Set Up Firebase Configuration
 
-Create a `.env` file in the root directory and add your Firebase credentials:
+Modify the .env file by inserting your personal Firebase account key as follows:
 
 ```
 VITE_FIREBASE_API_KEY=your_api_key
